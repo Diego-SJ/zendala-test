@@ -1,5 +1,7 @@
 import React from 'react';
 import { AlertCircle, AlertTriangle, Star } from 'react-feather';
+import { useDispatch } from 'react-redux';
+import { updateSavingAction } from '../../../redux/features/userSlice';
 import { addCommas } from '../../../tools/formatters';
 import { ISavingDay } from '../../../typings/types';
 import {
@@ -17,19 +19,25 @@ interface IProps {
 }
 
 const ActivityCard: React.FC<IProps> = ({ item }) => {
+	const dispatch = useDispatch();
 	const { status, date, day, amount } = item;
 	const getIcon = () => {
 		switch (status) {
 			case 'complete':
 				return <Star />;
 			case 'pending':
-				return <AlertTriangle />;
-			default:
 				return <AlertCircle />;
+			default:
+				return <AlertTriangle />;
 		}
 	};
+
+	const handleStatus = () => {
+		dispatch(updateSavingAction(day));
+	};
+
 	return (
-		<Card>
+		<Card onClick={handleStatus}>
 			<CardIcon state={status}>{getIcon()}</CardIcon>
 			<CardContent>
 				<CardDate>{date}</CardDate>

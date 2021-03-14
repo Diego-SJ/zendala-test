@@ -48,11 +48,11 @@ export const CardIcon = styled.div<IState>`
 	${({ theme, state }) =>
 		state === 'pending' &&
 		`
-    border: 4px solid ${theme.warning};
-    background: ${addOpacity(theme.warning, 0.2)};
+    border: 4px solid ${theme.asset};
+    background: ${addOpacity(theme.asset, 0.2)};
 
     & > svg {
-      stroke: ${theme.warning} !important;
+      stroke: ${theme.asset} !important;
     }
   `}
 `;

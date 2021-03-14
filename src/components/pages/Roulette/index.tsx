@@ -30,7 +30,7 @@ const Roulette = () => {
 			const randomDay = remainingDays[Math.floor(Math.random() * remainingDays.length)];
 			setDayRandomly(randomDay.day.toString());
 			setState('finished');
-		}, 5000);
+		}, 3000);
 	};
 
 	const restartRullete = async () => {
@@ -39,14 +39,14 @@ const Roulette = () => {
 				day: savingDays.length + 1,
 				amount: Number(dayRandomly),
 				date: moment().format('lll'),
-				status: 'complete'
+				status: 'pending'
 			} as ISavingDay)
 		);
 		setDayRandomly('?');
 		setState('');
 		enqueueSnackbar('¡Ahorro registrado!', {
 			anchorOrigin: {
-				vertical: 'bottom',
+				vertical: 'top',
 				horizontal: 'center'
 			},
 			variant: 'success',

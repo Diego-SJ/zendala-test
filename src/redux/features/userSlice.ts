@@ -73,17 +73,15 @@ export const {
 export default orderBase.reducer;
 
 // Actions
-const updateLocalSavingDays = (allDays: ISavingDay[]) => async (dispatch: any, getState: any) => {
-	dispatch(setSavingDays(allDays));
-	const total = allDays.reduce((total: number, day: ISavingDay) => day.amount + total, 0);
-	dispatch(setTotalSaving(total));
-};
-
 export const getCompletedDaysAction = () => async (dispatch: any, getState: any) => {
 	try {
 		const { user } = getState().user;
+
 		const allDays = await getAllDays(user.uid);
-		dispatch(updateLocalSavingDays(allDays));
+		dispatch(setSavingDays(allDays));
+
+		const total = allDays.reduce((total: number, day: ISavingDay) => day.amount + total, 0);
+		dispatch(setTotalSaving(total));
 	} catch (error) {
 		dispatch(setError(error.toString()));
 	}
@@ -93,8 +91,8 @@ export const siginAction = () => async (dispatch: any) => {
 	try {
 		dispatch(setLoading(true));
 		const userData = await loginWithGoogle();
-		dispatch(setCurrentPage(Routes.home));
 		dispatch(signinSuccess(userData));
+		dispatch(setCurrentPage(Routes.home));
 		dispatch(await getCompletedDaysAction());
 	} catch (error) {
 		dispatch(signinError());
@@ -110,9 +108,24 @@ export const recordNewSavingAction = (newSave: ISavingDay) => async (dispatch: a
 	try {
 		const { user, savingDays } = getState().user;
 		const savesUpdated = [...savingDays, newSave];
-		console.log(savesUpdated);
 		await saveNewDay(savesUpdated, user.uid);
-		dispatch(updateLocalSavingDays(savesUpdated));
+		dispatch(getCompletedDaysAction());
+	} catch (error) {
+		dispatch(setError(error.toString()));
+	}
+};
+
+export const updateSavingAction = (dayId: number) => async (dispatch: any, getState: any) => {
+	try {
+		const { user, savingDays } = getState().user;
+		let savesAux = [...savingDays];
+
+		const index = savesAux.findIndex((save) => save.day === dayId);
+		const status = savesAux[index].status === 'pending' ? 'complete' : 'pending';
+		savesAux[index] = { ...savesAux[index], status };
+
+		await saveNewDay(savesAux, user.uid);
+		dispatch(getCompletedDaysAction());
 	} catch (error) {
 		dispatch(setError(error.toString()));
 	}
