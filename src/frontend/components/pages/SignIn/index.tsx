@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign } from 'react-feather';
+import { User } from 'react-feather';
 import Button from '../../common/Button';
 import { Container, Logo, Title } from './SignIn.styled';
 import Google from '../../common/icons/Google';
@@ -22,7 +22,7 @@ const SignInPage: React.FC = (): JSX.Element => {
 	return (
 		<Container>
 			<Logo>
-				<DollarSign />
+				<User />
 			</Logo>
 			<Title>Inicia sesión</Title>
 			<Button text="Iniciar con Google" primary onClick={onSignIn} icon={<Google />} />

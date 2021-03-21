@@ -41,7 +41,7 @@ export const Logo = styled.div`
 	& > svg {
 		width: 5rem;
 		height: 5rem;
-		stroke: ${({ theme }) => theme.white};
+		stroke: ${({ theme }) => theme.colors.white};
 		animation: ${rouletteStateless} 5s infinite;
 	}
 `;
