@@ -25,6 +25,13 @@ export const lightTheme = {
 	bgBottomMenu: `linear-gradient(to left top, ${colors.melon}, ${colors.melon})`,
 	blueToPink: '#5465ff',
 	pinkToBlue: 'linear-gradient(to right, rgba(169, 53, 236, 1), rgb(0, 102, 255))',
+	breakPoints: {
+		xs: '400px',
+		sm: '600px',
+		md: '768px',
+		lg: '992px',
+		xl: '1200px'
+	},
 	fontSize: {
 		xs: '1.2rem',
 		sm: '1.5rem',

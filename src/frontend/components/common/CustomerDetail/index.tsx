@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteCustomerAction } from '../../../redux/features/customerSlice';
 import { RootState } from '../../../redux/store';
 import Button from '../Button';
-import { Detail, DetailsList, DetailsWrapper } from './CustomerDetail.styled';
+import { Detail, DetailsList } from './CustomerDetail.styled';
 
 const CustomerDetail: React.FC = (): JSX.Element => {
 	const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const CustomerDetail: React.FC = (): JSX.Element => {
 	};
 
 	return (
-		<DetailsWrapper>
+		<>
 			<DetailsList>
 				<Detail primary>
 					<span>Personal</span>
@@ -45,7 +45,7 @@ const CustomerDetail: React.FC = (): JSX.Element => {
 				block
 				onClick={onDelete}
 			/>
-		</DetailsWrapper>
+		</>
 	);
 };
 

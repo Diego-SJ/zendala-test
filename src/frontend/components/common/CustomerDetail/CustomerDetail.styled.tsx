@@ -4,21 +4,11 @@ interface ILi {
 	primary?: boolean;
 }
 
-export const DetailsWrapper = styled.div`
-	width: 100%;
-	height: 100%;
-	position: relative;
-
-	& button {
-		position: absolute;
-		bottom: 0;
-	}
-`;
-
 export const DetailsList = styled.ul`
 	width: 100%;
 	list-style: none;
 	padding: 0;
+	margin-bottom: 3rem;
 `;
 
 export const Detail = styled.li<ILi>`

@@ -17,7 +17,6 @@ export const ModalWrapper = styled.div`
 export const ModalContent = styled.div`
 	width: 90%;
 	max-width: 400px;
-	height: 70vh;
 	padding: 2rem 1rem 1rem 1rem;
 	display: flex;
 	flex-direction: column;
@@ -26,6 +25,7 @@ export const ModalContent = styled.div`
 	background-color: ${({ theme }) => theme.primary};
 	border-radius: ${({ theme }) => theme.borderRadius.sm};
 	position: relative;
+	overflow: auto;
 `;
 
 export const ModalClosable = styled.div`

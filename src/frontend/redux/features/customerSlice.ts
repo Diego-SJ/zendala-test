@@ -3,6 +3,8 @@ import { getContracts } from '../../../core/config/contracts';
 import { createCustomer } from '../../../core/usecases/customer/createCustomer';
 import { deleteCustomer } from '../../../core/usecases/customer/deleteCustomer';
 import { getCustomers } from '../../../core/usecases/customer/getCustomers';
+import { getCustomersFromFirebase } from '../../../core/usecases/customer/getCustomersFromFirebase';
+import { saveCustomersInFirebase } from '../../../core/usecases/customer/saveCustomersInFirebase';
 import { ICustomer } from '../../typings/types';
 import { AppDispatch, AppState } from '../store';
 import { handleCustomerForm, handleModalDetail } from './appSlice';
@@ -75,13 +77,19 @@ export const {
 
 export default customerSlice.reducer;
 
-export const getCostumersAction = () => async (dispatch: AppDispatch) => {
+export const getCostumersAction = () => async (dispatch: AppDispatch, getState: AppState) => {
 	try {
 		dispatch(fetchingCustomers());
+		const { user } = getState().user;
 
 		const customers = await getCustomers(customerContract);
+		const firebaseCustomers = await getCustomersFromFirebase(customerContract, user?.uid!);
 
-		dispatch(setCustomers(customers));
+		const customerList = customers.filter((customer) => {
+			return firebaseCustomers.find((cust) => cust.id === customer.id);
+		});
+
+		dispatch(setCustomers(customerList));
 	} catch (error) {
 		dispatch(setCustomersError(error.message));
 	}
@@ -93,11 +101,17 @@ export const createCustomerAction = (customer: ICustomer, reset: () => void) => 
 ) => {
 	try {
 		dispatch(setFetching(true));
-		const { customers } = getState().customer;
+		const {
+			customer: { customers },
+			user: { user }
+		} = getState();
 
 		const newCustomer = await createCustomer(customerContract, customer);
+		const customerList = [...customers.list, newCustomer];
 
-		dispatch(setCustomers([...customers.list, newCustomer]));
+		await saveCustomersInFirebase(customerContract, user?.uid!, customerList);
+		dispatch(setCustomers(customerList));
+
 		dispatch(handleCustomerForm(false));
 		reset();
 		dispatch(setFetching(false));
@@ -110,13 +124,16 @@ export const deleteCustomerAction = () => async (dispatch: AppDispatch, getState
 	try {
 		dispatch(setFetching(true));
 		const { currentCustomer, customers } = getState().customer;
+		const { user } = getState().user;
 
 		const result = await deleteCustomer(customerContract, currentCustomer?.id!);
 
 		if (result) {
-			dispatch(
-				setCustomers([...customers.list.filter((customer) => customer.id !== currentCustomer?.id)])
-			);
+			const customerList = customers.list.filter((customer) => customer.id !== currentCustomer?.id);
+
+			dispatch(setCustomers(customerList));
+			await saveCustomersInFirebase(customerContract, user?.uid!, customerList);
+
 			dispatch(setFetching(false));
 			dispatch(handleModalDetail(false));
 		}

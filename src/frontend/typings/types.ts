@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface IUser {
 	uid: string;
 	displayName: string;
@@ -34,3 +36,6 @@ export interface ICustomer {
 	store?: IStore;
 	clabe?: string;
 }
+
+export type SelectEvent = React.FormEvent<HTMLSelectElement>;
+export type SelectProps = React.HTMLProps<HTMLSelectElement>;

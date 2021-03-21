@@ -7,7 +7,8 @@ import { ICustomer } from '../../../typings/types';
 import { Button } from '../Button/Button.styled';
 import Input from '../Input';
 import { Form, FormRow, FormSection } from './CustomerForm.styled';
-import { COUNTRY_CODES } from '../../../constants/regex';
+import Select from '../Select';
+import { countryList } from '../../../constants/global';
 
 const CustomerForm: React.FC = (): JSX.Element => {
 	const dispatch = useDispatch();
@@ -86,9 +87,10 @@ const CustomerForm: React.FC = (): JSX.Element => {
 				<Input
 					value={cEmail}
 					onChange={({ target }) => setCEmail(target.value)}
-					type="email"
 					placeholder="Correo"
 					disabled={loading}
+					pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+					title="Correo invalido"
 					required
 				/>
 				<Input
@@ -134,13 +136,15 @@ const CustomerForm: React.FC = (): JSX.Element => {
 					disabled={loading}
 					required
 				/>
-				<Input
+				<Select
 					value={country}
-					onChange={({ target }) => setCountry(target.value.toUpperCase())}
+					onChange={({ target }: any) => setCountry(target?.value)}
 					placeholder="Código de país"
 					disabled={loading}
-					minLength={1}
-					pattern={COUNTRY_CODES}
+					options={countryList.map((country) => ({
+						value: country.code,
+						name: `${country.code} - ${country.name}`
+					}))}
 					required
 				/>
 			</FormRow>
